@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Data & Notebooks
+.ipynb_checkpoints
+*.csv
+*.xlsx
+*.xls
+*.json
+!requirements.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Reports
+*.pdf
+test_executive_report.pdf
+test_customer_database.xlsx
+Executive_Churn_Report.pdf
+Scored_Customers_Database.xlsx
+Customer_Retention_Scores.xlsx
+Executive_Customer_Churn_Report.pdf
