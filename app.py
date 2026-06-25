@@ -711,7 +711,7 @@ with tab7:
         
         with rep_col1:
             st.subheader("PDF Executive Report Settings")
-            author_name = st.text_input("Author/Preparer Name", value="Antigravity Churn Analytics Engine")
+            author_name = st.text_input("Author/Preparer Name", value="Predictive Churn Analytics Engine")
             report_title = st.text_input("Custom Document Header", value="Executive Subscription Retention Report")
             
             if st.button("Generate PDF Report", type="primary", use_container_width=True):

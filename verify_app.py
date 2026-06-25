@@ -10,41 +10,41 @@ from utils.report_generator import generate_pdf_report, generate_excel_report
 
 def run_verification():
     print("--------------------------------------------------")
-    print("🚀 Starting Predictive Churn Platform Verification")
+    print("[STARTING] Starting Predictive Churn Platform Verification")
     print("--------------------------------------------------")
     
     # 1. Test Data Generation
-    print("🧪 1. Testing Data Generation...")
+    print("[TEST] 1. Testing Data Generation...")
     df = generate_simulated_data(num_records=500, random_seed=42)
     print(f"   Success: Generated dataset with shape {df.shape}")
     
     # 2. Test Data Validation
-    print("🧪 2. Testing Data Validation...")
+    print("[TEST] 2. Testing Data Validation...")
     val = validate_data(df)
     print(f"   Success: Found {val['total_missing']} missing values, {val['duplicate_count']} duplicates, {val['total_outliers']} outliers.")
     
     # 3. Test Data Cleaning
-    print("🧪 3. Testing Data Cleaning & Feature Engineering...")
+    print("[TEST] 3. Testing Data Cleaning & Feature Engineering...")
     df_cleaned, log = clean_data(df, missing_strategy='Mean Imputation', outlier_method='IQR', outlier_threshold=1.5, remove_duplicates=True)
     df_engineered = engineer_features(df_cleaned)
     print(f"   Success: Cleaned data shape: {df_cleaned.shape}. Engineered data shape: {df_engineered.shape}")
     print(f"   Engineered columns: {[c for c in df_engineered.columns if c not in df.columns]}")
     
     # 4. Test Model Training
-    print("🧪 4. Testing Logistic Regression Training...")
+    print("[TEST] 4. Testing Logistic Regression Training...")
     features = ['Age', 'Tenure', 'Monthly_Spend', 'Login_Frequency', 'Session_Duration', 'Support_Tickets', 'Product_Usage', 'Last_Login_Days']
     results = train_logistic_regression(df_engineered, feature_cols=features, target_col='Renewal_Status', train_size=0.8)
     print(f"   Success: Trained model. Test Accuracy: {results['metrics']['accuracy']*100:.2f}%")
     print(f"   ROC-AUC Score: {results['metrics']['roc_auc']:.3f}")
     
     # 5. Test Scoring & Revenue Impact
-    print("🧪 5. Testing Scoring and MRR Retention Impacts...")
+    print("[TEST] 5. Testing Scoring and MRR Retention Impacts...")
     impact = forecast_renewal_revenue_impact(df_engineered, results['model'], results['scaler'], features)
     print(f"   Success: Expected Renewals: {impact['expected_renewals']} / {impact['total_customers']}")
     print(f"   MRR Retained: ${impact['expected_revenue_retained']:,.2f} | MRR At Risk: ${impact['expected_revenue_at_risk']:,.2f}")
     
     # 6. Test Single Prediction
-    print("🧪 6. Testing Individual Risk Prediction...")
+    print("[TEST] 6. Testing Individual Risk Prediction...")
     single_cust = {
         'Age': 35,
         'Tenure': 12,
@@ -56,15 +56,16 @@ def run_verification():
         'Last_Login_Days': 2
     }
     pred_res = predict_single_customer(results['model'], results['scaler'], features, single_cust)
-    print(f"   Success: Single client renewal probability: {pred_res['probability']*100:.2f}%. Tier: {pred_res['risk_level']}")
+    safe_tier = pred_res['risk_level'].encode('ascii', 'ignore').decode('ascii').strip()
+    print(f"   Success: Single client renewal probability: {pred_res['probability']*100:.2f}%. Tier: {safe_tier}")
     
     # 7. Test Trend Forecasting
-    print("🧪 7. Testing Cohort Trend Linear Regression...")
+    print("[TEST] 7. Testing Cohort Trend Linear Regression...")
     trend = forecast_future_trends(df_engineered, num_months=6)
     print(f"   Success: Next Month Forecasted renewal rate: {trend['next_month_rate']*100:.2f}%")
     
     # 8. Test Reports
-    print("🧪 8. Testing Executive Report Exports (PDF and Excel)...")
+    print("[TEST] 8. Testing Executive Report Exports (PDF and Excel)...")
     pdf_path = "test_executive_report.pdf"
     excel_path = "test_customer_database.xlsx"
     
@@ -80,11 +81,11 @@ def run_verification():
         os.remove(excel_path)
         print("   Success: Temporary report files cleaned up.")
     else:
-        print("   ❌ Error: Report files were not created.")
+        print("   [ERROR] Error: Report files were not created.")
         sys.exit(1)
         
     print("--------------------------------------------------")
-    print("🎉 Verification Complete! All systems operational.")
+    print("[COMPLETED] Verification Complete! All systems operational.")
     print("--------------------------------------------------")
 
 if __name__ == "__main__":
